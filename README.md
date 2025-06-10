@@ -20,7 +20,7 @@ Next.js와 TypeScript, React-Query를 학습하기 위해 간단한 대시보드
 
 ### Testing
 
-- **Test Framework**: Jest
+- **Test Framework**: Vitest
 - **Component Testing**: React Testing Library
 - **Test Environment**: jsdom
 
@@ -59,13 +59,14 @@ Next.js와 TypeScript, React-Query를 학습하기 위해 간단한 대시보드
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/ui": "^3.2.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
+    "jsdom": "^26.1.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.3"
   }
 ```
 
@@ -73,11 +74,11 @@ Next.js와 TypeScript, React-Query를 학습하기 위해 간단한 대시보드
 
 - [ ] Next.js 15 App Router 학습
 - [ ] TypeScript를 활용한 타입 안전성 확보
-- [ ] Tailwind CSS + Shadcn/ui로 모던 UI 구축
+- [ ] Tailwind CSS + Shadcn UI로 UI 구축
 - [ ] React Hook Form + Zod를 활용한 폼 검증
 - [ ] React Query를 통한 서버 상태 관리
 - [ ] TDD(Test-Driven Development) 방법론 적용
-- [ ] Jest + React Testing Library로 컴포넌트 테스팅
+- [ ] Vitest + React Testing Library로 컴포넌트 테스팅
 
 ## 🚀 시작하기
 
@@ -86,7 +87,7 @@ Next.js와 TypeScript, React-Query를 학습하기 위해 간단한 대시보드
 ```bash
 npm install
 # 또는
-yarn install
+pnpm install
 ```
 
 ### 개발 서버 실행
@@ -94,34 +95,40 @@ yarn install
 ```bash
 npm run dev
 # 또는
-yarn dev
+pnpm dev
 ```
+
+### 테스트 실행
+
+```bash
+npm test
+# 또는
+pnpm test
+# 또는
+pnpm test:ui
 
 ## 📁 프로젝트 구조
 
-<!--
-```
-├── app/                    # Next.js 15 App Router
-│   ├── dashboard/         # 대시보드 페이지
-│   ├── globals.css        # 전역 스타일
-│   └── layout.tsx         # 루트 레이아웃
-├── components/            # 재사용 가능한 컴포넌트
-│   ├── ui/               # Shadcn/ui 컴포넌트
-│   └── forms/            # 폼 관련 컴포넌트
-├── lib/                  # 유틸리티 함수
-│   ├── utils.ts          # 공통 유틸
-│   └── validations.ts    # Zod 스키마
-├── hooks/                # 커스텀 훅
-│   └── use-query.ts      # React Query 훅
-└── types/                # TypeScript 타입 정의
-    └── index.ts
-```
--->
+# ├── app/ # Next.js 15 App Router
+# │ ├── dashboard/ # 대시보드 페이지
+# │ ├── globals.css # 전역 스타일
+# │ └── layout.tsx # 루트 레이아웃
+# ├── components/ # 재사용 가능한 컴포넌트
+# │ ├── ui/ # Shadcn/ui 컴포넌트
+# │ └── forms/ # 폼 관련 컴포넌트
+# ├── lib/ # 유틸리티 함수
+# │ ├── utils.ts # 공통 유틸
+# │ └── validations.ts # Zod 스키마
+# ├── hooks/ # 커스텀 훅
+# │ └── use-query.ts # React Query 훅
+# └── types/ # TypeScript 타입 정의
+# └── index.ts
+
 
 ## 🔧 개발 환경
 
 - **Node.js**: 18.17.0 이상
-- **Package Manager**: npm
+- **Package Manager**: pnpm
 - **IDE**: VS Code
 
 ## 📚 참고 자료
@@ -138,10 +145,11 @@ yarn dev
 - [x] 기본 레이아웃 구성
 - [x] 로그인 UI 구현
 - [x] 테스팅 도구 환경 설정
-- [ ] 로그인 폼 TDD 구현
+- [x] 로그인 폼 TDD 구현
 - [ ] 회원가입 UI 구현
 - [ ] 대시보드 UI 구현
 - [ ] API 연동 (예정)
 - [ ] 상태 관리 적용 (예정)
 
 ---
+```
