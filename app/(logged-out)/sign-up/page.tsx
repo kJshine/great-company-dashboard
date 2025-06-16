@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
@@ -18,6 +19,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -25,9 +31,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CalendarIcon } from "lucide-react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { format } from "date-fns";
 
 const formSchema = z
   .object({
@@ -35,6 +43,15 @@ const formSchema = z
     accountType: z.enum(["personal", "company"]),
     companyName: z.string().optional(),
     numberOfEmployee: z.coerce.number().optional(),
+    dob: z.date().refine((date) => {
+      const today = new Date();
+      const eightedYearAgo = new Date(
+        today.getFullYear() - 18,
+        today.getMonth(),
+        today.getDay()
+      );
+      return date <= eightedYearAgo;
+    }, "18세 미만은 가입하실 수 없습니다"),
   })
   .superRefine((data, ctx) => {
     if (data.accountType === "company" && !data.companyName) {
@@ -70,6 +87,9 @@ export default function LoginPage() {
   };
 
   const accountType = form.watch("accountType");
+
+  const dobFromDate = new Date();
+  dobFromDate.setFullYear(dobFromDate.getFullYear() - 120);
 
   return (
     <>
@@ -143,6 +163,7 @@ export default function LoginPage() {
                         <FormLabel>직원 수</FormLabel>
                         <FormControl>
                           <Input
+                            min={0}
                             type="number"
                             placeholder="직원 수를 입력해주세요"
                             {...field}
@@ -152,8 +173,61 @@ export default function LoginPage() {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>이메일</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="이메일을 입력해주세요."
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                 </>
               )}
+              <FormField
+                control={form.control}
+                name="dob"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>생년월일</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            className="flex justify-between"
+                          >
+                            {!!field.value
+                              ? format(field.value, "PPP")
+                              : "날짜 선택"}
+                            <CalendarIcon />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent align="start" className="w-auto">
+                        <Calendar
+                          mode="single"
+                          defaultMonth={field.value}
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          fixedWeeks
+                          weekStartsOn={1}
+                          hidden={{ after: new Date(), before: dobFromDate }}
+                          captionLayout="dropdown"
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <Button type="submit">회원가입</Button>
             </form>
           </Form>
