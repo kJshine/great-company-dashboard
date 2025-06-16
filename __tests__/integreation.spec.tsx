@@ -2,6 +2,7 @@ import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import LoginPage from "@/app/(logged-out)/login/page";
 import LandingPage from "@/app/(logged-out)/page";
+import SignupPage from "@/app/(logged-out)/sign-up/page";
 
 vi.mock("next/navigation", () => ({
   useRouter: vi.fn(),
@@ -21,10 +22,9 @@ describe("랜딩페이지 통합 테스트", () => {
 
   it("랜딩 페이지가 올바르게 렌더링된다", () => {
     expect(screen.getByText("MyCompany")).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: "로그인" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "로그인" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "회원가입" })).toBeInTheDocument();
   });
-
 
   it("로그인 버튼 클릭 시 로그인 페이지로 이동한다", async () => {
     const loginButton = screen.getByRole("link", { name: "로그인" });
@@ -43,7 +43,7 @@ describe("랜딩페이지 통합 테스트", () => {
   });
 });
 
-describe("LoginPage 통합 테스트", () => {
+describe("로그인페이지 통합 테스트", () => {
   let user: ReturnType<typeof userEvent.setup>;
 
   beforeEach(() => {
@@ -101,5 +101,27 @@ describe("LoginPage 통합 테스트", () => {
     });
 
     consoleSpy.mockRestore();
+  });
+});
+
+describe("회원가입 페이지 통합 테스트", () => {
+  let user: ReturnType<typeof userEvent.setup>;
+
+  beforeEach(() => {
+    render(<SignupPage />);
+    user = userEvent.setup();
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('페이지에 올바른 입력폼이 렌더링된다', () => {
+    expect(screen.getByText("회원가입")).toBeInTheDocument();
+    expect(screen.getByLabelText(/이메일/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/계정유형/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/생년월일/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/비밀번호/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/비밀번호 확인/i)).toBeInTheDocument();
   });
 });
