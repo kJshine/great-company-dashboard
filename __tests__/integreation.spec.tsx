@@ -1,19 +1,57 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import LoginPage from "@/app/(logged-out)/login/page";
+import LandingPage from "@/app/(logged-out)/page";
+
+vi.mock("next/navigation", () => ({
+  useRouter: vi.fn(),
+}));
+
+describe("랜딩페이지 통합 테스트", () => {
+  let user: ReturnType<typeof userEvent.setup>;
+
+  beforeEach(() => {
+    render(<LandingPage />);
+    user = userEvent.setup();
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it("랜딩 페이지가 올바르게 렌더링된다", () => {
+    expect(screen.getByText("MyCompany")).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: "로그인" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "회원가입" })).toBeInTheDocument();
+  });
+
+
+  it("로그인 버튼 클릭 시 로그인 페이지로 이동한다", async () => {
+    const loginButton = screen.getByRole("link", { name: "로그인" });
+
+    await user.click(loginButton);
+
+    expect(loginButton).toHaveAttribute("href", "/login");
+  });
+
+  it("회원가입 버튼 클릭 시 회원가입 페이지로 이동한다", async () => {
+    const signupButton = screen.getByRole("link", { name: "회원가입" });
+
+    await user.click(signupButton);
+
+    expect(signupButton).toHaveAttribute("href", "/sign-up");
+  });
+});
 
 describe("LoginPage 통합 테스트", () => {
   let user: ReturnType<typeof userEvent.setup>;
 
   beforeEach(() => {
-    // 각 테스트 전에 컴포넌트 렌더링
     render(<LoginPage />);
-    // userEvent 설정
     user = userEvent.setup();
   });
 
   afterEach(() => {
-    // 각 테스트 후 정리 (Vitest는 자동이지만 명시적으로 하고 싶다면)
     cleanup();
   });
 
