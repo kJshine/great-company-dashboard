@@ -40,69 +40,13 @@ import { format } from "date-fns";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
+import { AUTH_CONSTANTS, AUTH_MESSAGE, AUTH_REGEX } from "@/lib/constants";
+import { authFormSchema } from "@/lib/schema";
 
-const formSchema = z
-  .object({
-    email: z.string().email(),
-    accountType: z.enum(["personal", "company"]),
-    companyName: z.string().optional(),
-    numberOfEmployee: z.coerce.number().optional(),
-    dob: z.date().refine((date) => {
-      const today = new Date();
-      const eightedYearAgo = new Date(
-        today.getFullYear() - 18,
-        today.getMonth(),
-        today.getDate()
-      );
-      return date <= eightedYearAgo;
-    }, "18세 미만은 가입하실 수 없습니다"),
-    password: z
-      .string()
-      .min(8, "비밀번호는 8자리 이상 입력해주세요")
-      .refine((password) => {
-        const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
-        return specialCharRegex.test(password);
-      }, "비밀번호에 특수문자를 포함해주세요"),
-    passwordConfirm: z.string(),
-    acceptTerm: z
-      .boolean({
-        required_error: "이용약관에 동의해주세요",
-      })
-      .refine((checked) => checked, "이용약관에 동의해주세요"),
-  })
-  .superRefine((data, ctx) => {
-    if (data.accountType === "company" && !data.companyName) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["companyName"],
-        message: "회사 이름을 입력해주세요",
-      });
-    }
-
-    if (
-      data.accountType === "company" &&
-      (!data.numberOfEmployee || data.numberOfEmployee < 0)
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["numberOfEmployee"],
-        message: "직원 수를 입력해주세요",
-      });
-    }
-
-    if (data.password !== data.passwordConfirm) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["passwordConfirm"],
-        message: "비밀번호가 일치하지 않습니다",
-      });
-    }
-  });
-
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof authFormSchema>>({
+    resolver: zodResolver(authFormSchema),
     defaultValues: {
       email: "",
       companyName: "",
@@ -113,7 +57,7 @@ export default function LoginPage() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
+  const onSubmit = (data: z.infer<typeof authFormSchema>) => {
     console.log(data);
     router.push("/dashboard");
   };
@@ -121,7 +65,7 @@ export default function LoginPage() {
   const accountType = form.watch("accountType");
 
   const dobFromDate = new Date();
-  dobFromDate.setFullYear(dobFromDate.getFullYear() - 120);
+  dobFromDate.setFullYear(dobFromDate.getFullYear() - AUTH_CONSTANTS.MAX_AGE);
 
   return (
     <>
@@ -142,7 +86,7 @@ export default function LoginPage() {
                   <FormItem>
                     <FormLabel>이메일</FormLabel>
                     <FormControl>
-                      <Input placeholder="이메일을 입력해주세요." {...field} />
+                      <Input placeholder="이메일을 입력해주세요" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
