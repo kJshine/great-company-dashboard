@@ -36,6 +36,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
+import { PasswordInput } from "@/components/ui/password-input";
 
 const formSchema = z
   .object({
@@ -48,10 +49,18 @@ const formSchema = z
       const eightedYearAgo = new Date(
         today.getFullYear() - 18,
         today.getMonth(),
-        today.getDay()
+        today.getDate()
       );
       return date <= eightedYearAgo;
     }, "18세 미만은 가입하실 수 없습니다"),
+    password: z
+      .string()
+      .min(8, "비밀번호는 8자리 이상 입력해주세요")
+      .refine((password) => {
+        const specialCharRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        return specialCharRegex.test(password);
+      }, "비밀번호에 특수문자를 포함해주세요"),
+    passwordConfirm: z.string(),
   })
   .superRefine((data, ctx) => {
     if (data.accountType === "company" && !data.companyName) {
@@ -70,6 +79,14 @@ const formSchema = z
         code: z.ZodIssueCode.custom,
         path: ["numberOfEmployee"],
         message: "직원 수를 입력해주세요",
+      });
+    }
+
+    if (data.password !== data.passwordConfirm) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["passwordConfirm"],
+        message: "비밀번호가 일치하지 않습니다",
       });
     }
   });
@@ -205,13 +222,13 @@ export default function LoginPage() {
                             className="flex justify-between"
                           >
                             {!!field.value
-                              ? format(field.value, "PPP")
+                              ? format(field.value, "P")
                               : "날짜 선택"}
                             <CalendarIcon />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent align="start" className="w-auto">
+                      <PopoverContent align="start" className="w-auto p-0">
                         <Calendar
                           mode="single"
                           defaultMonth={field.value}
@@ -224,6 +241,38 @@ export default function LoginPage() {
                         />
                       </PopoverContent>
                     </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>비밀번호</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        placeholder="특수 문자를 포함한 8자리 이상의 비밀번호를 입력해주세요"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="passwordConfirm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>비밀번호 확인</FormLabel>
+                    <FormControl>
+                      <PasswordInput
+                        placeholder="비밀번호를 다시 입력해주세요"
+                        {...field}
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

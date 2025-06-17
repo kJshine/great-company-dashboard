@@ -117,11 +117,11 @@ describe("회원가입 페이지 통합 테스트", () => {
   });
 
   it('페이지에 올바른 입력폼이 렌더링된다', () => {
-    expect(screen.getByLabelText(/이메일/i)).toBeInTheDocument();
+    expect(screen.getByLabelText("이메일")).toBeInTheDocument();
     expect(screen.getByText("계정 유형")).toBeInTheDocument();
     expect(screen.getByText("계정 유형을 선택해주세요")).toBeInTheDocument();
-    expect(screen.getByLabelText(/생년월일/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/비밀번호/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/비밀번호 확인/i)).toBeInTheDocument();
+    expect(screen.getByLabelText("생년월일")).toBeInTheDocument();
+    expect(screen.getByLabelText("비밀번호")).toBeInTheDocument();
+    expect(screen.getByLabelText("비밀번호 확인")).toBeInTheDocument();
   });
 });
