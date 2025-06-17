@@ -31,17 +31,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarIcon } from "lucide-react";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { format } from "date-fns";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useRouter } from "next/navigation";
-import { AUTH_CONSTANTS, AUTH_MESSAGE, AUTH_REGEX } from "@/lib/constants";
-import { authFormSchema } from "@/lib/schema";
 import { useSignup } from "@/hooks/useSignup";
 
 export default function SignupPage() {
