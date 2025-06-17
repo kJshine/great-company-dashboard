@@ -12,6 +12,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -37,6 +38,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { format } from "date-fns";
 import { PasswordInput } from "@/components/ui/password-input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -61,6 +64,11 @@ const formSchema = z
         return specialCharRegex.test(password);
       }, "비밀번호에 특수문자를 포함해주세요"),
     passwordConfirm: z.string(),
+    acceptTerm: z
+      .boolean({
+        required_error: "이용약관에 동의해주세요",
+      })
+      .refine((checked) => checked, "이용약관에 동의해주세요"),
   })
   .superRefine((data, ctx) => {
     if (data.accountType === "company" && !data.companyName) {
@@ -92,15 +100,22 @@ const formSchema = z
   });
 
 export default function LoginPage() {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
+      companyName: "",
+      numberOfEmployee: 0,
+      password: "",
+      passwordConfirm: "",
+      acceptTerm: false,
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    console.log(data);
+    router.push("/dashboard");
   };
 
   const accountType = form.watch("accountType");
@@ -190,22 +205,6 @@ export default function LoginPage() {
                       </FormItem>
                     )}
                   />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>이메일</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="이메일을 입력해주세요."
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </>
               )}
               <FormField
@@ -273,6 +272,28 @@ export default function LoginPage() {
                         {...field}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="acceptTerm"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-start gap-2 pt-4">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel>(필수)개인정보약관 동의</FormLabel>
+                    </div>
+                    <FormDescription>
+                      회원가입을 위해{" "}
+                      <Link href="/terms">개인정보처리방침</Link>에 동의합니다
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

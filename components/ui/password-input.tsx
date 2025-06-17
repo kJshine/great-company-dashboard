@@ -13,7 +13,12 @@ function PasswordInput({
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div className={cn("relative")}>
-      <Input type={showPassword ? "text" : "password"} {...props} className={cn("pr-10", className)} />
+      <Input
+        type={showPassword ? "text" : "password"}
+        data-slot="input"
+        {...props}
+        className={cn("pr-10", className)}
+      />
       <span
         className={cn("absolute top-[7px] right-3 cursor-pointer select-none")}
       >
