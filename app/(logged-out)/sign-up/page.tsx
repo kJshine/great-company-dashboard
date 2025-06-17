@@ -42,30 +42,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
 import { AUTH_CONSTANTS, AUTH_MESSAGE, AUTH_REGEX } from "@/lib/constants";
 import { authFormSchema } from "@/lib/schema";
+import { useSignup } from "@/hooks/useSignup";
 
 export default function SignupPage() {
-  const router = useRouter();
-  const form = useForm<z.infer<typeof authFormSchema>>({
-    resolver: zodResolver(authFormSchema),
-    defaultValues: {
-      email: "",
-      companyName: "",
-      numberOfEmployee: 0,
-      password: "",
-      passwordConfirm: "",
-      acceptTerm: false,
-    },
-  });
-
-  const onSubmit = (data: z.infer<typeof authFormSchema>) => {
-    console.log(data);
-    router.push("/dashboard");
-  };
-
-  const accountType = form.watch("accountType");
-
-  const dobFromDate = new Date();
-  dobFromDate.setFullYear(dobFromDate.getFullYear() - AUTH_CONSTANTS.MAX_AGE);
+  const { form, onSubmit, accountType, dobFromDate } = useSignup();
 
   return (
     <>
