@@ -292,7 +292,10 @@ export default function LoginPage() {
                     </div>
                     <FormDescription>
                       회원가입을 위해{" "}
-                      <Link href="/terms">개인정보처리방침</Link>에 동의합니다
+                      <Link href="/terms" className="text-primary">
+                        개인정보처리방침
+                      </Link>
+                      에 동의합니다
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
