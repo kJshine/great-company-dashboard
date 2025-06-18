@@ -1,3 +1,5 @@
+"use client";
+
 import { UseFormReturn } from "react-hook-form";
 import {
   FormControl,
@@ -10,30 +12,36 @@ import { Input } from "../ui/input";
 
 interface FormInputProps {
   form: UseFormReturn<any>;
-  name: string;
   label: string;
-  placeholder: string;
+  name?: string;
+  placeholder?: string;
   type?: string;
+
+  // HTML input 속성
+  min?: number;
 }
 
 export const FormInput = ({
   form,
-  name,
+  name = "",
   label,
-  placeholder,
+  placeholder = "",
   type = "text",
+  min,
 }: FormInputProps) => {
-  <FormField
-    control={form.control}
-    name={name}
-    render={({ field }) => (
-      <FormItem>
-        <FormLabel>{label}</FormLabel>
-        <FormControl>
-          <Input type={type} placeholder={placeholder} {...field} />
-        </FormControl>
-        <FormMessage />
-      </FormItem>
-    )}
-  />;
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <Input type={type} placeholder={placeholder} min={min} {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
 };

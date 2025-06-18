@@ -37,6 +37,7 @@ import { format } from "date-fns";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useSignup } from "@/hooks/useSignup";
+import { FormInput } from "@/components/form/form-input";
 
 export default function SignupPage() {
   const { form, onSubmit, accountType, dobFromDate } = useSignup();
@@ -53,18 +54,11 @@ export default function SignupPage() {
               className="flex flex-col gap-4"
               onSubmit={form.handleSubmit(onSubmit)}
             >
-              <FormField
-                control={form.control}
+              <FormInput
+                form={form}
                 name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>이메일</FormLabel>
-                    <FormControl>
-                      <Input placeholder="이메일을 입력해주세요" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="이메일"
+                placeholder="이메일을 입력해주세요"
               />
               <FormField
                 control={form.control}
@@ -89,39 +83,19 @@ export default function SignupPage() {
               />
               {accountType === "company" && (
                 <>
-                  <FormField
-                    control={form.control}
+                  <FormInput
+                    form={form}
                     name="companyName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>회사</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="회사명을 입력해주세요."
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="회사"
+                    placeholder="회사명을 입력해주세요"
                   />
-                  <FormField
-                    control={form.control}
+                  <FormInput
+                    form={form}
+                    type="number"
                     name="numberOfEmployee"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>직원 수</FormLabel>
-                        <FormControl>
-                          <Input
-                            min={0}
-                            type="number"
-                            placeholder="직원 수를 입력해주세요"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                    label="직원 수"
+                    min={0}
+                    placeholder="직원 수를 입력해주세요"
                   />
                 </>
               )}
@@ -162,37 +136,19 @@ export default function SignupPage() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
+              <FormInput
+                form={form}
                 name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>비밀번호</FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        placeholder="특수 문자를 포함한 8자리 이상의 비밀번호를 입력해주세요"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="비밀번호"
+                type="password"
+                placeholder="특수 문자를 포함한 8자리 이상의 비밀번호를 입력해주세요"
               />
-              <FormField
-                control={form.control}
+              <FormInput
+                form={form}
                 name="passwordConfirm"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>비밀번호 확인</FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        placeholder="비밀번호를 다시 입력해주세요"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="비밀번호 확인"
+                type="password"
+                placeholder="비밀번호를 다시 입력해주세요"
               />
               <FormField
                 control={form.control}
