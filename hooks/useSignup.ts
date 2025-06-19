@@ -1,5 +1,5 @@
 import { AUTH_CONSTANTS } from "@/lib/constants";
-import { authFormSchema } from "@/lib/schema";
+import { signupFormSchema } from "@/lib/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -7,8 +7,8 @@ import * as z from "zod";
 
 export const useSignup = () => {
   const router = useRouter();
-  const form = useForm<z.infer<typeof authFormSchema>>({
-    resolver: zodResolver(authFormSchema),
+  const form = useForm<z.infer<typeof signupFormSchema>>({
+    resolver: zodResolver(signupFormSchema),
     defaultValues: {
       email: "",
       companyName: "",
@@ -19,7 +19,7 @@ export const useSignup = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof authFormSchema>) => {
+  const onSubmit = (data: z.infer<typeof signupFormSchema>) => {
     console.log(data);
     router.push("/dashboard");
   };

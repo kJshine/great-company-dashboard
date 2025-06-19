@@ -2,12 +2,27 @@ import * as z from "zod";
 
 import { AUTH_CONSTANTS, AUTH_MESSAGE, AUTH_REGEX } from "@/lib/constants";
 
-export const authFormSchema = z
-  .object({
-    email: z
-      .string()
-      .nonempty(AUTH_MESSAGE.EMAIL_REQUIRED)
-      .email(AUTH_MESSAGE.EMAIL_INVALID),
+export const baseFormSchema = z.object({
+  email: z
+    .string()
+    .nonempty(AUTH_MESSAGE.EMAIL_REQUIRED)
+    .email(AUTH_MESSAGE.EMAIL_INVALID),
+  password: z.string().nonempty(AUTH_MESSAGE.PASSWORD_REQUIRED),
+});
+
+export const loginFormSchema = baseFormSchema;
+
+export const signupFormSchema = baseFormSchema
+  .extend({
+    password: baseFormSchema.shape.password
+      .min(
+        AUTH_CONSTANTS.MIN_PASSWORD_LENGTH,
+        AUTH_MESSAGE.PASSWORD_MUST_HAVING
+      )
+      .refine((password) => {
+        const specialCharRegex = AUTH_REGEX.SPECIAL_CHAR;
+        return specialCharRegex.test(password);
+      }, AUTH_MESSAGE.PASSWORD_SPECIAL_CHARACTER),
     accountType: z.enum(
       [
         AUTH_CONSTANTS.ACCOUNT_TYPES.PERSONAL,
@@ -28,13 +43,6 @@ export const authFormSchema = z
       );
       return date <= eightedYearAgo;
     }, AUTH_MESSAGE.AGE_RESTRICTION),
-    password: z
-      .string()
-      .min(AUTH_CONSTANTS.MIN_PASSWORD_LENGTH, AUTH_MESSAGE.PASSWORD_REQUIERED)
-      .refine((password) => {
-        const specialCharRegex = AUTH_REGEX.SPECIAL_CHAR;
-        return specialCharRegex.test(password);
-      }, AUTH_MESSAGE.PASSWORD_SPECIAL_CHARACTER),
     passwordConfirm: z.string(),
     acceptTerm: z
       .boolean()
