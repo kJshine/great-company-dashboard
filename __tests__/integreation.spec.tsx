@@ -128,3 +128,25 @@ describe("회원가입 페이지 통합 테스트", () => {
     expect(screen.getByLabelText("비밀번호 확인")).toBeInTheDocument();
   });
 });
+
+describe("대시보드 페이지 통합 테스트", () => {
+  let user: ReturnType<typeof userEvent.setup>;
+
+  beforeEach(() => {
+    render(<SignupPage />);
+    user = userEvent.setup();
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it("페이지에 요소들이 올바르게 렌더링된다", () => {
+    expect(screen.getByText("김재환님, 환영합니다")).toBeInTheDocument();
+    expect(screen.getByText("대시보드")).toBeInTheDocument();
+    expect(screen.getByText("팀")).toBeInTheDocument();
+    expect(screen.getByText("고용인")).toBeInTheDocument();
+    expect(screen.getByText("계정")).toBeInTheDocument();
+    expect(screen.getByText("설정")).toBeInTheDocument();
+  });
+});
