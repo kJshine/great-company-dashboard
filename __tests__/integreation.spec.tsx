@@ -4,6 +4,8 @@ import LoginPage from "@/app/(logged-out)/login/page";
 import LandingPage from "@/app/(logged-out)/page";
 import SignupPage from "@/app/(logged-out)/sign-up/page";
 import { AUTH_MESSAGE } from "@/lib/constants";
+import DashboardPage from "@/app/dashboard/page";
+import DashboardLayout from "@/app/dashboard/layout";
 
 vi.mock("next/navigation", () => ({
   useRouter: vi.fn(),
@@ -133,7 +135,7 @@ describe("대시보드 페이지 통합 테스트", () => {
   let user: ReturnType<typeof userEvent.setup>;
 
   beforeEach(() => {
-    render(<SignupPage />);
+    render(<DashboardLayout children={<DashboardPage />} />);
     user = userEvent.setup();
   });
 
