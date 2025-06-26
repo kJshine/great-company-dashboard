@@ -147,7 +147,7 @@ describe("대시보드 페이지 통합 테스트", () => {
     expect(screen.getByText("김재환님, 환영합니다")).toBeInTheDocument();
     expect(screen.getByText("대시보드")).toBeInTheDocument();
     expect(screen.getByText("팀")).toBeInTheDocument();
-    expect(screen.getByText("고용인")).toBeInTheDocument();
+    expect(screen.getByText("직원")).toBeInTheDocument();
     expect(screen.getByText("계정")).toBeInTheDocument();
     expect(screen.getByText("설정")).toBeInTheDocument();
   });
